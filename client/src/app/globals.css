@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 248 250 252;
+  --foreground: 15 23 42;
+  --muted: 100 116 139;
+  --card: 255 255 255;
+  --border: 226 232 240;
+  --accent: 14 165 233;
+}
+
+.dark {
+  --background: 15 23 42;
+  --foreground: 241 245 249;
+  --muted: 148 163 184;
+  --card: 30 41 59;
+  --border: 51 65 85;
+  --accent: 56 189 248;
+}
+
+body {
+  @apply bg-slate-50 text-slate-900 antialiased dark:bg-slate-900 dark:text-slate-100;
+}

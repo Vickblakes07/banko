@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+
+# Env (any folder)
+.env
+.env.*
+!.env.example
+!.env*.example
+.env.local
+.env*.local
+
+# Vercel
+.vercel
+
+# Next.js
+client/.next/
+client/out/
+
+# Build / logs
+dist/
+build/
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/*
+!.vscode/extensions.json
