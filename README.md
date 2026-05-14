@@ -27,11 +27,13 @@ banko/
 │           └── jwt.js
 └── client/                    # Next.js + Tailwind
     ├── package.json
+    ├── vercel.json            # forces Next.js on Vercel (avoids wrong "public" output dir)
     ├── next.config.ts
     ├── tsconfig.json
     ├── postcss.config.mjs
     ├── tailwind.config.ts
     ├── .env.example
+    ├── public/                # static assets (optional; keeps Next layout standard)
     └── src/
         ├── app/
         │   ├── globals.css
@@ -168,7 +170,8 @@ Vercel runs the **Next.js app** in `client/`. The **Express API** in `server/` d
 1. **Push** this repo to GitHub (steps above).
 2. In [Vercel](https://vercel.com/) → **Add New Project** → import the repo.
 3. Set **Root Directory** to `client` (important).
-4. **Environment variables** (Vercel → Project → Settings → Environment Variables), for *Production* (and Preview if you use previews):
+4. Under **Build & Development Settings**, leave **Output Directory** **empty** (default). If it says `public`, **clear it** — Next.js outputs to `.next`; a wrong `public` output setting causes: *“No Output Directory named public found”*. **Framework Preset** should be **Next.js** (we ship `client/vercel.json` with `"framework": "nextjs"` to help).
+5. **Environment variables** (Vercel → Project → Settings → Environment Variables), for *Production* (and Preview if you use previews):
 
    | Name | Value |
    |------|--------|
@@ -176,9 +179,9 @@ Vercel runs the **Next.js app** in `client/`. The **Express API** in `server/` d
    
    Leave `NEXT_PUBLIC_API_URL` **unset** so the browser keeps using same-origin `/api/...` (proxied by Vercel to your API).
 
-5. On your **API host**, set `MONGODB_URI`, `JWT_SECRET`, and **`PORT`** (Render sets this). **`CLIENT_ORIGIN`** is optional for standard Vercel URLs (`https://*.vercel.app` is allowed by default). Add `CLIENT_ORIGIN` for **custom domains** or set **`CORS_STRICT=true`** if you want to allow only the comma-separated list + localhost.
+6. On your **API host**, set `MONGODB_URI`, `JWT_SECRET`, and **`PORT`** (Render sets this). **`CLIENT_ORIGIN`** is optional for standard Vercel URLs (`https://*.vercel.app` is allowed by default). Add `CLIENT_ORIGIN` for **custom domains** or set **`CORS_STRICT=true`** if you want to allow only the comma-separated list + localhost.
 
-6. Redeploy Vercel after changing env vars.
+7. Redeploy Vercel after changing env vars.
 
 ## Deploy API on [Render](https://render.com/)
 
