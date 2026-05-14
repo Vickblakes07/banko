@@ -176,9 +176,36 @@ Vercel runs the **Next.js app** in `client/`. The **Express API** in `server/` d
    
    Leave `NEXT_PUBLIC_API_URL` **unset** so the browser keeps using same-origin `/api/...` (proxied by Vercel to your API).
 
-5. On your **API host**, set `MONGODB_URI`, `JWT_SECRET`, `PORT` (or use host default), and `CLIENT_ORIGIN` to your real site URLs, comma-separated if needed, e.g.  
-   `https://your-app.vercel.app,https://your-app-git-main-xxx.vercel.app`
+5. On your **API host**, set `MONGODB_URI`, `JWT_SECRET`, and **`PORT`** (Render sets this). **`CLIENT_ORIGIN`** is optional for standard Vercel URLs (`https://*.vercel.app` is allowed by default). Add `CLIENT_ORIGIN` for **custom domains** or set **`CORS_STRICT=true`** if you want to allow only the comma-separated list + localhost.
 
 6. Redeploy Vercel after changing env vars.
+
+## Deploy API on [Render](https://render.com/)
+
+Use Render for the **Express** app in `server/`. Use [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) (free tier) for `MONGODB_URI` — Render does not include MongoDB on the free web service.
+
+1. In Render → **New** → **Web Service** → connect repo [Vickblakes07/banko](https://github.com/Vickblakes07/banko) (or your fork).
+2. **Settings:**
+   - **Root Directory:** `server`
+   - **Runtime:** Node (LTS)
+   - **Build Command:** `npm install`
+   - **Start Command:** `npm start`
+3. **Environment** (Render → Environment → add):
+
+   | Key | Example / notes |
+   |-----|------------------|
+   | `MONGODB_URI` | Atlas connection string (`mongodb+srv://...`) |
+   | `JWT_SECRET` | Long random string (not the default from `.env.example`) |
+   | `CLIENT_ORIGIN` | Optional extra allowlist (custom domains, non-Vercel frontends). Comma-separated. `https://*.vercel.app` is allowed automatically unless `CORS_STRICT=true`. |
+   | `CORS_STRICT` | Set to `true` to allow only `CLIENT_ORIGIN` + localhost (stricter). |
+   | `HOST` | `0.0.0.0` (optional; helps bind on all interfaces) |
+
+   Render injects **`PORT`** automatically — your app already uses `process.env.PORT`.
+
+4. **Create Web Service** and wait for the first deploy. Copy the service URL (e.g. `https://banko-api.onrender.com`).
+5. **Vercel:** set `API_INTERNAL_URL` to that exact origin (**no** trailing slash), then **Redeploy**.
+6. **Cold starts:** On Render’s free tier the service sleeps after idle time; the first request after sleep can take ~30–60s.
+
+**Smoke test:** open `https://YOUR-SERVICE.onrender.com/health` — you should see `{"ok":true,"database":"connected"}` when MongoDB is reachable.
 
 Local dev is unchanged: run API on port 5000 and Next on 3000 (or `npm run dev` from repo root).

@@ -3,24 +3,15 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const { connectDb } = require("./config/db");
+const { corsOptions } = require("./config/cors");
 const authRoutes = require("./routes/auth.routes");
 const accountRoutes = require("./routes/account.routes");
 
 const app = express();
 const port = Number(process.env.PORT) || 5000;
 const host = process.env.HOST || "0.0.0.0";
-const clientOriginRaw = process.env.CLIENT_ORIGIN || "http://localhost:3000";
-const clientOrigins = clientOriginRaw
-  .split(",")
-  .map((o) => o.trim())
-  .filter(Boolean);
 
-app.use(
-  cors({
-    origin: clientOrigins.length === 1 ? clientOrigins[0] : clientOrigins,
-    credentials: true,
-  })
-);
+app.use(cors(corsOptions()));
 app.use(express.json());
 
 app.get("/health", (_req, res) => {
