@@ -1,9 +1,9 @@
 import { clearToken, getToken } from "./auth-storage";
 
 /**
- * If unset, requests use same-origin `/api/...` and Next.js rewrites proxy to Express
- * (see `next.config.ts`). That works when you open the app via LAN IP, not only localhost.
- * Set `NEXT_PUBLIC_API_URL` only when the API is on another host (e.g. production).
+ * Browser calls same-origin `/api/...`. In dev, `src/app/api/[...path]/route.ts` proxies to
+ * `API_INTERNAL_URL` or http://127.0.0.1:5000. On Vercel, set `API_INTERNAL_URL` to your Render API.
+ * Set `NEXT_PUBLIC_API_URL` only if the API is on another host and you are not using the proxy.
  */
 const base = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/$/, "");
 

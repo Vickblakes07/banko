@@ -36,6 +36,11 @@ banko/
     ├── public/                # static assets (optional; keeps Next layout standard)
     └── src/
         ├── app/
+        │   ├── api/
+        │   │   └── [...path]/
+        │   │       └── route.ts   # proxies /api/* → Render (runtime API_INTERNAL_URL)
+        │   ├── health/
+        │   │   └── route.ts       # proxies GET /health → Render
         │   ├── globals.css
         │   ├── layout.tsx
         │   ├── page.tsx
@@ -175,7 +180,7 @@ Vercel runs the **Next.js app** in `client/`. The **Express API** in `server/` d
 
    | Name | Value |
    |------|--------|
-   | `API_INTERNAL_URL` | Your deployed API base URL, e.g. `https://banko-api.onrender.com` (no trailing slash). Used by `next.config.ts` rewrites so `/api/*` and `/health` proxy to Express. |
+   | `API_INTERNAL_URL` | Your Render API base URL, e.g. `https://banko-psp6.onrender.com` (no trailing slash). Read **at request time** by the Next.js API proxy — set this in Vercel and **redeploy** so serverless picks it up. |
    
    Leave `NEXT_PUBLIC_API_URL` **unset** so the browser keeps using same-origin `/api/...` (proxied by Vercel to your API).
 

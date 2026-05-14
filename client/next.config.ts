@@ -1,9 +1,6 @@
 import path from "path";
 import type { NextConfig } from "next";
 
-/** Where Express runs (same machine in dev). Used only for server-side rewrites. */
-const apiOrigin = process.env.API_INTERNAL_URL || "http://127.0.0.1:5000";
-
 const allowedDevOrigins =
   process.env.ALLOWED_DEV_ORIGINS?.split(",")
     .map((s) => s.trim())
@@ -14,18 +11,10 @@ const nextConfig: NextConfig = {
   /** Keeps tracing inside `client/` when a lockfile exists in the repo root */
   outputFileTracingRoot: path.join(__dirname),
   ...(allowedDevOrigins.length > 0 ? { allowedDevOrigins } : {}),
-  async rewrites() {
-    return [
-      {
-        source: "/health",
-        destination: `${apiOrigin}/health`,
-      },
-      {
-        source: "/api/:path*",
-        destination: `${apiOrigin}/api/:path*`,
-      },
-    ];
-  },
+  /**
+   * API traffic goes through `src/app/api/[...path]/route.ts` so `API_INTERNAL_URL`
+   * is read at request time (Vercel). Build-time rewrites baked the wrong URL when the env var was missing.
+   */
 };
 
 export default nextConfig;
