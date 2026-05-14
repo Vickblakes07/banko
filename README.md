@@ -59,7 +59,9 @@ banko/
         │   └── WithdrawModal.tsx
         └── lib/
             ├── api.ts
-            └── auth-storage.ts
+            ├── auth-storage.ts
+            ├── types.ts
+            └── upstream-api.ts
 ```
 
 ## Prerequisites
